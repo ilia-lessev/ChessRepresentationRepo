@@ -1,0 +1,78 @@
+<meta charset="utf-8">
+<title>Netstock Chess Ranking History Board</title>
+
+<head>
+  <meta charset="utf-8">
+  {% load static %}  
+  
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+  <style>
+    .header{
+      margin: 0px; 
+      font-weight: 300; 
+      font-size: 24px; 
+      font-family: 'Roboto','Lucida Grande','DejaVu Sans','Bitstream Vera Sans',Verdana,Arial,sans-serif;
+    }
+    .subHead{
+      font-weight: 300; 
+      font-size: 20px; 
+      font-family: 'Roboto','Lucida Grande','DejaVu Sans','Bitstream Vera Sans',Verdana,Arial,sans-serif;
+      text-align: center;
+    }
+    .gridDisplay{
+      display: grid; 
+      grid-template-columns: auto auto; 
+      margin-top:15px; 
+      padding: 10px; 
+      background:#79aec8; 
+      font-size:medium 
+    }   
+    span.observablehq--inspect{
+        display: none;
+    }
+    span.observablehq--cellname{
+        background:#ffaa00; 
+    } 
+    span.observablehq--undefined{
+        background:#aa00ff; 
+    } 
+    
+    
+    
+    
+    </style>
+   
+  <link href="{% static '/inspector.css' %}">
+</head>
+
+<body style="padding: 25px 25px 25px 25px">
+  <div class="row" style="padding: 15px 15px 15px 50px; height: auto; background: #417690; color: #f5dd5d ; text-align: center; ">
+    <h1 class="header">VIEW RANKING HISTORY</h1>
+  </div>
+ 
+  
+  <script type="module">
+  
+    import define from "{% static '/index.js' %}";
+    import {Runtime, Library, Inspector} from "{% static '/runtime.js' %}";
+    const runtime = new Runtime();
+    const main = runtime.module(define, Inspector.into(document.body));
+    //const inspect = Inspector.into(document.body);
+    //const cells = new Set(["chartByRankSimplesss","chartByRankExtendedsss","chartByPointssss","viewof dataframesss","viewof dataframeByPointssss","dataframessss", "dataframesss","barssss","dataframeByPointssss","datasss","durationsss","nsss","ksss","namessss","datepointssss","rankByRanksss","rankByPointssss","dataframessss","dataframesByPointssss","heightsss","barSizesss","marginsss","u1","u2","u3","barsSimplesss"]);
+    //const main = runtime.module(define, name => cells.has(name) ? inspect() : undefined);
+  </script>  
+  
+  
+</body>
+  
+  
+  
+  
+ 
+  
+  
+
+
+
+
