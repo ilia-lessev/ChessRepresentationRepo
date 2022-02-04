@@ -22,15 +22,23 @@ md`Put the data in structures and transform it to correct format fot the chart.`
 
 
 
-  main.variable(observer()).define("dataImported", ["FileAttachment"], function(FileAttachment){return(
+main.variable(observer()).define("dataImported", ["FileAttachment"], function(FileAttachment){return(
 FileAttachment("rankingHistory.csv").csv({typed: true})
 )});
 
 main.variable(observer()).define("allKeys", ["dataImported"], function(dataImported){return(
     new Set(dataImported.map(d => d.name))
+)});
+
+main.variable(observer()).define("allDates", ["dataframesByPoints","formatDate"], function(dataframesByPoints,formatDate){return(
+    new Set(dataframesByPoints.map(d => formatDate(d.date)))
     
+
+
     
 )});
+
+
 
 /*
 main.variable(observer("sortedData")).define("sortedData", ["d3","dataImported"], function(d3,dataImported){
@@ -40,7 +48,7 @@ main.variable(observer("sortedData")).define("sortedData", ["d3","dataImported"]
     return sortedArray;
     
     //return arrayDateGroups
- }); 
+ });                                                                                                                                x
  */
  
  
@@ -114,6 +122,32 @@ main.variable(observer("dataframesByPointsSingle")).define("dataframesByPointsSi
     return data_frames;
 }
 );
+
+main.variable(observer("dfByPointsFiltered")).define("dfByPointsFiltered", ["d3","dataframesByPoints","n","t3","formatDate"], function(d3,dataframesByPoints,n,t3,formatDate)
+{
+    const data_frames = [];
+    //var i = 0
+    dataframesByPoints.forEach((d_el) => {
+    
+       // var ar = Array.from(d_el[1].values()).slice(0, n);
+        //ar.forEach((o_el) => {
+            if(formatDate(d_el.date)<=t3)
+            {
+                data_frames.push(d_el);
+            }
+        
+        });
+        
+        
+        
+        //i++;    
+    //});
+    
+    return data_frames;
+}
+);
+
+
 
 /*
 main.variable(observer("dataframesByPointsInter")).define("dataframesByPointsInter", ["d3","k","datepoints","n"], function(d3,k,datepoints,n)
@@ -222,7 +256,7 @@ LineChartAnimated(dataframesByPointsSingle , {
 
 main.variable(observer("viewof t")).define("viewof t", ["Scrubber","d3"], function(Scrubber,d3){return(
 Scrubber(d3.ticks(0, 1, 8000), {
-  autoplay: true,
+  autoplay: false,
   loop: false,
   initial: 1,
   format: x => `t = ${x.toFixed(6)}`
@@ -258,23 +292,18 @@ LineChartAnimatedMulti(dataframesByPoints , {
   
 main.variable(observer("viewof t2")).define("viewof t2", ["Scrubber","d3"], function(Scrubber,d3){return(
 Scrubber(d3.ticks(0, 1, 8000), {
-  autoplay: true,
+  autoplay: false,
   loop: false,
   initial: 1,
   format: x => `t2 = ${x.toFixed(6)}`
 })
 )});
-  main.variable(observer("t2")).define("t2", ["Generators", "viewof t2"], (G, _) => G.input(_));
+main.variable(observer("t2")).define("t2", ["Generators", "viewof t2"], (G, _) => G.input(_));
 
-
- 
      
 main.variable(observer()).define(["md"], function(md){return(
 md`# Debugging through Z dimention.`
 )});
-
-  
-
 
 main.variable(observer("chartDebugZ")).define("chartDebugZ", ["LineChart","width","allKeys","dataframesByPoints"], function(LineChart,width,allKeys,dataframesByPoints){return(
 
@@ -294,12 +323,48 @@ LineChart(dataframesByPoints , {
 
 
 
-  main.variable(observer("LineChart")).define("LineChart", ["d3","allKeys",], function(d3,allKeys){
+
+
+
+main.variable(observer()).define(["md"], function(md){return(
+md`# Chart multiple players tracking with better animation.`
+)});
+                                             
+  
+
+
+main.variable(observer("chartMultiAnimatedBetter")).define("chartMultiAnimatedBetter", ["LineChart","width","allKeys","dfByPointsFiltered"], function(LineChart,width,allKeys,dfByPointsFiltered){return(
+
+LineChart(dfByPointsFiltered, {
+  x: d => d.date,
+  y: d => d.points,
+  z: d => d.name,
+  yLabel: "Points",
+  width,
+  height: 500,
+  color: "steelblue"
+})
+)});
+
+
+main.variable(observer("viewof t3")).define("viewof t3", ["Scrubber","allDates","formatDate"], function(Scrubber,allDates,formatDate){return(
+Scrubber(allDates, {
+  format: (x) => x,
+  delay: 900,
+  loop: false,
+  autoplay: false,
+})
+)});
+
+main.variable(observer("t3")).define("t3", ["Generators", "viewof t3"], (G, _) => G.input(_));
+
+
+main.variable(observer("LineChart")).define("LineChart", ["d3","allKeys",], function(d3,allKeys){
   
   
   return(
  
-function LineChart(data, {
+  function LineChart(data, {
 
   x = ([x]) => x, // given d in data, returns the (temporal) x-value
   y = ([, y]) => y, // given d in data, returns the (quantitative) y-value
@@ -489,12 +554,12 @@ function LineChart(data, {
 
 
 
-  main.variable(observer("LineChartAnimated")).define("LineChartAnimated", ["d3","allKeys","lineLength","t"], function(d3,allKeys,lineLength,t){
+main.variable(observer("LineChartAnimated")).define("LineChartAnimated", ["d3","allKeys","lineLength","t"], function(d3,allKeys,lineLength,t){
   
   
   return(
  
-function LineChartAnimated(data, {
+  function LineChartAnimated(data, {
 
   x = ([x]) => x, // given d in data, returns the (temporal) x-value
   y = ([, y]) => y, // given d in data, returns the (quantitative) y-value
@@ -689,8 +754,8 @@ main.variable(observer("LineChartAnimatedMulti")).define("LineChartAnimatedMulti
   
   
   return(
- 
-function LineChartAnimatedMulti(data, {
+  
+  function LineChartAnimatedMulti(data, {
 
   x = ([x]) => x, // given d in data, returns the (temporal) x-value
   y = ([, y]) => y, // given d in data, returns the (quantitative) y-value
@@ -760,7 +825,6 @@ function LineChartAnimatedMulti(data, {
         .ticks(height / 80, )
   } 
   
-
   // Compute titles.
   const T = title === undefined ? Z : title === null ? null : d3.map(data, winratio);          //title
 
@@ -878,15 +942,19 @@ function LineChartAnimatedMulti(data, {
 )});
 
   
-  
-    
  
- main.variable(observer("lineLength")).define("lineLength", ["htl"], function(htl){return(
-   1800
-//htl.svg`<path d="${line(data)}">`.getTotalLength()
-)});  
+
+main.variable(observer("lineLength")).define("lineLength", ["htl","dataframesByPoints"], function(htl,dataframesByPoints){return(
+   3000
+   //htl.svg`<path d="${line(dataframesByPoints)}">`.getTotalLength()
+)});
 
 
+
+main.variable(observer("formatDate")).define("formatDate", ["d3"], function(d3){return(
+    d3.utcFormat("%Y-%m-%d %H:%M:%S")
+    //d3.utcFormat("%Y")
+)});
 main.variable(observer("html")).define("html", ["htl"], function(htl){return(
 htl.html
 )});

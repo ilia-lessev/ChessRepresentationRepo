@@ -25,7 +25,8 @@ md`The data will go through various transformations. The most important ones are
 )});
 main.variable(observer()).define(["md"], function(md){return(
 md`Extract unique names in a Set.`
-)}); main.variable(observer("names")).define("names", ["data"], function(data){return(
+)});
+main.variable(observer("names")).define("names", ["data"], function(data){return(
 new Set(data.map(d => d.name))
 )});
 main.variable(observer()).define(["md"], function(md){return(
